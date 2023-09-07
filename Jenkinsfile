@@ -35,20 +35,19 @@ pipeline {
                 script {
                     def containerName = "my-running-app"
 
-                    // Check if container is running, then stop and remove it
-                    bat """
-                        if docker ps -q -f name=${containerName}; then
-                            docker rm -f ${containerName} || echo 'Failed to stop and remove container'
-                        else
-                            echo 'No container to stop and remove'
-                        fi
-                    """
+                    // Check if the container is running
+                    def isRunning = bat(script: "docker ps -q -f name=${containerName}", returnStatus: true)
+                    if (isRunning == 0) {
+                        // Stop and remove the container
+                        bat "docker rm -f ${containerName} || echo 'Failed to stop and remove container'"
+                    } else {
+                        echo 'No container to stop and remove'
+                    }
 
                     // Run the new container
                     bat "docker run -d --name ${containerName} -p 8080:8080 my-tomcat-app:latest"
                 }
             }
-}
-
+        }
     }
 }
