@@ -45,7 +45,7 @@ pipeline {
                     }
 
                     // Run the new container
-                    bat "docker run -d --name ${containerName} -p 8080:8080 my-tomcat-app:latest"
+                    bat "docker run -d --name ${containerName} -p 8090:8090 my-tomcat-app:latest"
                 }
             }
         }
